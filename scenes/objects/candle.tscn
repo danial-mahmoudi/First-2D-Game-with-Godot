@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://c1ri86rj3taso"]
+
+[ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_5tksn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvpfn"]
+atlas = ExtResource("1_5tksn")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dinhu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kvpfn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_kvuet"]
+offsets = PackedFloat32Array(0, 0.70666665)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_trtic"]
+gradient = SubResource("Gradient_kvuet")
+width = 150
+height = 150
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5tksn"]
+size = Vector2(8, 17.5)
+
+[node name="Candle" type="StaticBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, 0)
+sprite_frames = SubResource("SpriteFrames_dinhu")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(0, 2)
+energy = 0.86
+shadow_enabled = true
+shadow_filter = 1
+shadow_filter_smooth = 1.4
+texture = SubResource("GradientTexture2D_trtic")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 7.25)
+shape = SubResource("RectangleShape2D_5tksn")
