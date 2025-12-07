@@ -19,7 +19,7 @@ animations = [{
 
 [sub_resource type="Gradient" id="Gradient_kvuet"]
 offsets = PackedFloat32Array(0, 0.70666665)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+colors = PackedColorArray(1, 1, 0.8235294, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_trtic"]
 gradient = SubResource("Gradient_kvuet")
