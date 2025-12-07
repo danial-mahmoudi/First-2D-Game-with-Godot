@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="First2D"
+run/main_scene="uid://cw1cbw157qecy"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://assets/art/characters/icon.svg"
 
@@ -54,6 +55,8 @@ swap_form={
 
 2d_physics/layer_1="walls"
 2d_physics/layer_2="objects"
+2d_physics/layer_3="player"
+2d_physics/layer_4="shadow-caster"
 
 [rendering]
 

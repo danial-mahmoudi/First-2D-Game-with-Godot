@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1ri86rj3taso"]
+[gd_scene load_steps=8 format=3 uid="uid://c1ri86rj3taso"]
 
 [ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_5tksn"]
+[ext_resource type="Script" uid="uid://ds4680v6fmynv" path="res://scenes/objects/point_light_2d.gd" id="2_5divp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kvpfn"]
 atlas = ExtResource("1_5tksn")
@@ -37,13 +38,16 @@ size = Vector2(8, 17.5)
 position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_dinhu")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." groups=["light"]]
 position = Vector2(0, 2)
 energy = 0.86
 shadow_enabled = true
 shadow_filter = 1
 shadow_filter_smooth = 1.4
 texture = SubResource("GradientTexture2D_trtic")
+script = ExtResource("2_5divp")
+radius = 80.0
+intensity_per_second = 250.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 7.25)

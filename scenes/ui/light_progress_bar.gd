@@ -7,7 +7,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var ratio = value / max_value
 	
 	# 2. Blend the color
@@ -20,3 +20,7 @@ func _process(delta: float) -> void:
 	var stylebox = get_theme_stylebox("fill")
 	stylebox.bg_color = new_color
 	
+
+
+func _on_player_light_point_changed(new_value: Variant) -> void:
+	value = new_value
