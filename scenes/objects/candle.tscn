@@ -18,12 +18,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Gradient" id="Gradient_kvuet"]
+[sub_resource type="Gradient" id="Gradient_5divp"]
 offsets = PackedFloat32Array(0, 0.70666665)
 colors = PackedColorArray(1, 1, 0.8235294, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_trtic"]
-gradient = SubResource("Gradient_kvuet")
+gradient = SubResource("Gradient_5divp")
 width = 150
 height = 150
 fill = 1
@@ -41,9 +41,11 @@ sprite_frames = SubResource("SpriteFrames_dinhu")
 [node name="PointLight2D" type="PointLight2D" parent="." groups=["light"]]
 position = Vector2(0, 2)
 energy = 0.86
+range_item_cull_mask = 5
 shadow_enabled = true
 shadow_filter = 1
 shadow_filter_smooth = 1.4
+shadow_item_cull_mask = 5
 texture = SubResource("GradientTexture2D_trtic")
 script = ExtResource("2_5divp")
 radius = 80.0

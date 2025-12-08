@@ -2,13 +2,14 @@ extends CharacterBody2D
 
 const DELTA = 0.01
 
-@export var MAX_HUMAN_SPEED = 100.0
-@export var MIN_HUMAN_SPEED = 50.0
+@export var MAX_HUMAN_SPEED = 120.0
+@export var MIN_HUMAN_SPEED = 80.0
 @export var MAX_BAT_SPEED = 180.0
 @export var MIN_BAT_SPEED = 100.0
 @export var BAR_USE_SPEED = 20.0
 @export var BAR_IDLE_SPEED = 6.0
 @export var BAR_LOAD_SPEED = 6.0
+@export var is_invinsible = true
 enum Form {HUMAN, BAT}
 var current_form = Form.HUMAN
 var is_moving = false
@@ -109,7 +110,7 @@ func update_light_meter(delta: float):
 		
 		# IMPORTANT: Only collide with Layer 1 (Walls)
 		# If we hit nothing, the path is clear.
-		query.collision_mask = 8 
+		query.collision_mask = 8 # layer 4, the shadow casters
 		
 		var result = space_state.intersect_ray(query)
 		
@@ -135,7 +136,7 @@ func update_light_meter(delta: float):
 func update_light_amount(amount:float):
 	light_point += amount
 	light_point = clamp(light_point, 0, 100)
-	if 100.0 - light_point < DELTA:
+	if 100.0 - light_point < DELTA and not is_invinsible:
 		kill_and_respawn()
 	# Emit signal to UI (The one we set up previously)
 	light_point_changed.emit(light_point)
@@ -173,9 +174,3 @@ func kill_and_respawn():
 	current_form = Form.HUMAN
 	update_form_visuals()
 	global_position = spawn_point.global_position
-	
-	
-
-	
-	
-	

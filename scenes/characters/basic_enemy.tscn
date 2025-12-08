@@ -1,0 +1,86 @@
+[gd_scene load_steps=11 format=3 uid="uid://yf52pqfih43e"]
+
+[ext_resource type="Script" uid="uid://b2xr5x6khdgu2" path="res://scenes/characters/basic_enemy.gd" id="1_dwul0"]
+[ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_y5dvh"]
+[ext_resource type="Script" uid="uid://ds4680v6fmynv" path="res://scenes/objects/point_light_2d.gd" id="2_xsmbu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xsmbu"]
+size = Vector2(16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dwul0"]
+atlas = ExtResource("1_y5dvh")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wh1i7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dwul0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_kvuet"]
+offsets = PackedFloat32Array(0, 0.70666665)
+colors = PackedColorArray(1, 1, 0.8235294, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dwul0"]
+gradient = SubResource("Gradient_kvuet")
+width = 200
+height = 200
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_dwul0"]
+polygon = PackedVector2Array(-7, 7, -10, 16, -8.000001, 5.999999, -4, 6, -2, 16, -5, 7)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_wh1i7"]
+polygon = PackedVector2Array(-6, 13, 6, 13, 6, 16, -6, 16)
+
+[node name="BasicEnemy" type="CharacterBody2D"]
+light_mask = 2
+script = ExtResource("1_dwul0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8.5)
+shape = SubResource("RectangleShape2D_xsmbu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wh1i7")
+
+[node name="FlashlightHolder" type="Node2D" parent="."]
+position = Vector2(-6, 10)
+
+[node name="VisionCone" type="Area2D" parent="FlashlightHolder"]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FlashlightHolder/VisionCone"]
+position = Vector2(-5, -6)
+rotation = -1.570271
+polygon = PackedVector2Array(35, 95, -6, 5, -49, 95)
+
+[node name="PointLight2D" type="PointLight2D" parent="FlashlightHolder" groups=["light"]]
+energy = 0.86
+shadow_enabled = true
+shadow_filter = 1
+shadow_filter_smooth = 1.4
+shadow_item_cull_mask = 9
+texture = SubResource("GradientTexture2D_dwul0")
+script = ExtResource("2_xsmbu")
+radius = 60.0
+intensity_per_second = 250.0
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="FlashlightHolder"]
+position = Vector2(-7, -6)
+rotation = -1.5707964
+occluder = SubResource("OccluderPolygon2D_dwul0")
+occluder_light_mask = 8
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_wh1i7")
+occluder_light_mask = 4

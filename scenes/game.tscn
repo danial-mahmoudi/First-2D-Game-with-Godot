@@ -1,8 +1,9 @@
-[gd_scene load_steps=44 format=4 uid="uid://cw1cbw157qecy"]
+[gd_scene load_steps=46 format=4 uid="uid://cw1cbw157qecy"]
 
 [ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://c1ri86rj3taso" path="res://scenes/objects/candle.tscn" id="2_lbhrr"]
 [ext_resource type="Script" uid="uid://b5dgnwt4xdpgr" path="res://scenes/characters/player.gd" id="2_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://yf52pqfih43e" path="res://scenes/characters/basic_enemy.tscn" id="4_gee14"]
 [ext_resource type="Script" uid="uid://x7ggnqqxtowy" path="res://scenes/ui/flying_progress_bar.gd" id="4_lbhrr"]
 [ext_resource type="Script" uid="uid://c2os0tn0sgscv" path="res://scenes/ui/light_progress_bar.gd" id="4_u5sy4"]
 [ext_resource type="Texture2D" uid="uid://cwumr15gnfp57" path="res://assets/art/prototype/bat-icon.png" id="5_p57ef"]
@@ -376,6 +377,12 @@ polygon = PackedVector2Array(-3, -30, 5, -30, 5, -26, -3, -26)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_dinhu"]
 polygon = PackedVector2Array(-4, -4, 4, -4, 10, -2, 3, 0, -4, 0, -10, -2)
 
+[sub_resource type="Curve2D" id="Curve2D_gee14"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 560, 31, 0, 0, 0, 0, 562, 345, 0, 0, 0, 0, 490, 343, 0, 0, 0, 0, 489, 31, 0, 0, 0, 0, 560, 29)
+}
+point_count = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p57ef"]
 bg_color = Color(0, 0, 0, 0.44705883)
 corner_radius_top_left = 4
@@ -424,7 +431,7 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAJAAwAAAASAAIAAAAMAAIAAQAAAAAAAQAHAAcAAQAAAAAAAQAKAAkAAQAAAAAAAQACAAgAAQAAAAAAAQAQAAcAAQAAAAAAAQANAAUAAAAPAAIAAAA=")
 tile_set = SubResource("TileSet_iywne")
 
-[node name="Player" type="CharacterBody2D" parent="Level1"]
+[node name="Player" type="CharacterBody2D" parent="Level1" groups=["player"]]
 position = Vector2(295, 382)
 collision_layer = 4
 collision_mask = 3
@@ -460,6 +467,15 @@ sdf_collision = false
 
 [node name="SpawnPoint" type="Node2D" parent="Level1"]
 position = Vector2(303, 393)
+
+[node name="NPC" type="Node2D" parent="Level1"]
+
+[node name="BasicEnemy" parent="Level1/NPC" node_paths=PackedStringArray("patrol_path") instance=ExtResource("4_gee14")]
+position = Vector2(483, 91)
+patrol_path = NodePath("../Path2D")
+
+[node name="Path2D" type="Path2D" parent="Level1/NPC"]
+curve = SubResource("Curve2D_gee14")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
