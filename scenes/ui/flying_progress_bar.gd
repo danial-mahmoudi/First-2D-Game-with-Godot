@@ -5,7 +5,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-func _process(_delta):
+func _physics_process(_delta):
 	# 1. Calculate the ratio (0.0 is empty, 1.0 is full)
 	var ratio = value / max_value
 	

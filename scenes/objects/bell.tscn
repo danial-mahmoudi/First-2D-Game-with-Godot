@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://gl4ufwjqyc7h"]
+
+[ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_0df5t"]
+[ext_resource type="Script" uid="uid://cdhe2oca1res7" path="res://scenes/objects/bell.gd" id="1_poxvm"]
+[ext_resource type="Script" uid="uid://fame3jq8yxqq" path="res://scenes/objects/bell_cooldown_bar.gd" id="3_7jw41"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7jw41"]
+radius = 37.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_poxvm"]
+atlas = ExtResource("1_0df5t")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7jw41"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_poxvm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SystemFont" id="SystemFont_poxvm"]
+msdf_pixel_range = 6
+msdf_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_7jw41"]
+font = SubResource("SystemFont_poxvm")
+font_size = 8
+
+[node name="Bell" type="StaticBody2D" groups=["interactable"]]
+collision_layer = 6
+collision_mask = 6
+script = ExtResource("1_poxvm")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(1, 2)
+polygon = PackedVector2Array(-1, -12, -5, -9, -6, -8, -8, -3, -8, 2, -6, 3, -2, 4, -1, 4, 2, 3, 1, 6, -2, 7, -4, 9, -4, 10, -3, 11, 8, 11, 9, 10, 9, 9, 7, 7, 4, 6, 3, 3, 5, 2, 5, -3, 4, -6, 3, -8, 3, -10, 1, -12)
+
+[node name="NoticeArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NoticeArea"]
+shape = SubResource("CircleShape2D_7jw41")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_7jw41")
+
+[node name="Hint" type="Label" parent="."]
+offset_left = -42.0
+offset_top = -35.0
+offset_right = 42.0
+offset_bottom = -22.0
+text = "PRESS X TO INTERACT"
+label_settings = SubResource("LabelSettings_7jw41")
+
+[node name="CooldownBar" type="ProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -18.0
+offset_right = 17.0
+offset_bottom = -12.0
+show_percentage = false
+script = ExtResource("3_7jw41")

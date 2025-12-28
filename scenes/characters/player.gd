@@ -2,20 +2,30 @@ extends CharacterBody2D
 
 const DELTA = 0.01
 
-@export var MAX_HUMAN_SPEED = 120.0
-@export var MIN_HUMAN_SPEED = 80.0
-@export var MAX_BAT_SPEED = 180.0
-@export var MIN_BAT_SPEED = 100.0
-@export var BAR_USE_SPEED = 20.0
-@export var BAR_IDLE_SPEED = 6.0
-@export var BAR_LOAD_SPEED = 6.0
-@export var is_invinsible = true
+@export var MAX_HUMAN_SPEED := 120.0
+@export var MIN_HUMAN_SPEED := 30.0
+@export var MAX_BAT_SPEED := 180.0
+@export var MIN_BAT_SPEED := 100.0
+@export var BAR_USE_SPEED := 20.0
+@export var BAR_IDLE_SPEED := 6.0
+@export var BAR_LOAD_SPEED := 6.0
+@export var is_invinsible := true
+@export var MAX_HEALTH := 6
+@export var DAMAGE_PER_SECOND := 1
+
 enum Form {HUMAN, BAT}
 var current_form = Form.HUMAN
-var is_moving = false
+
+var is_moving := false
+var is_taking_hit := false
+var is_in_any_light := false
 
 var light_point := 0.0 # between 0 and 100
 var fly_point := 100.0 # between 0 and 100
+var health_point := MAX_HEALTH
+var damage_timer := 0.0
+
+var current_interactable_object: StaticBody2D = null
 
 @onready var human_col: CollisionShape2D = $HumanCollisionShape
 @onready var bat_col: CollisionShape2D = $BatCollisionShape
@@ -25,19 +35,19 @@ var fly_point := 100.0 # between 0 and 100
 
 signal fly_point_changed(new_value)
 signal light_point_changed(new_value)
+signal health_point_changed(new_value)
 
 
 func _ready():
-	# Initialize: Ensure one is disabled and the other is active
 	update_form_visuals()
 
 func _physics_process(delta):
-	# Listen for the swap key (e.g., "F" key mapped to "swap_form")
-	
 	if Input.is_action_just_pressed("swap_form"):
 		swap_form()
+		
+	if Input.is_action_just_pressed("interact"):
+		interact()
 	
-	# Apply movement logic based on current form
 	if current_form == Form.HUMAN:
 		move_human(delta)
 		
@@ -46,11 +56,11 @@ func _physics_process(delta):
 	
 	update_light_meter(delta)
 	update_fly_meter(delta)
+	update_health_meter(delta)
 
 func swap_form():
-	# Toggle the state
 	if current_form == Form.HUMAN:
-		current_form = Form.BAT
+		if not is_in_any_light: current_form = Form.BAT
 	else:
 		current_form = Form.HUMAN
 	
@@ -75,6 +85,17 @@ func update_form_visuals():
 		set_collision_mask_value(1, true)
 		set_collision_mask_value(2, false)
 		
+func interact():
+	if current_interactable_object != null and current_interactable_object.has_method("player_interact"):
+		current_interactable_object.player_interact(self)
+		
+func register_interactable(node: Node2D):
+	current_interactable_object = node
+
+func unregister_interactable(node: Node2D):
+	if current_interactable_object == node:
+		current_interactable_object = null
+
 func move_human(_delta: float):
 	var directoion:= Input.get_vector("left", "right", "up", "down")  
 	velocity = directoion * (MIN_HUMAN_SPEED + (MAX_HUMAN_SPEED - MIN_HUMAN_SPEED) * (1 - light_point/100.0))
@@ -86,16 +107,15 @@ func move_human(_delta: float):
 	
 func update_light_meter(delta: float):
 	var total_exposure_amount = 0.0
-	var is_in_any_light = false
-	
-	# 1. Get all lights in the level
-	var all_lights = get_tree().get_nodes_in_group("light")
-	var space_state = get_world_2d().direct_space_state
+	is_in_any_light = false
 	
 	if current_form == Form.BAT:
 		update_light_amount(-1 * BAR_LOAD_SPEED * delta)
 		return
 		
+	# 1. Get all lights in the level
+	var all_lights = get_tree().get_nodes_in_group("light")
+	var space_state = get_world_2d().direct_space_state
 	
 	for light in all_lights:
 		# 2. DISTANCE CHECK (Optimization)
@@ -136,9 +156,6 @@ func update_light_meter(delta: float):
 func update_light_amount(amount:float):
 	light_point += amount
 	light_point = clamp(light_point, 0, 100)
-	if 100.0 - light_point < DELTA and not is_invinsible:
-		kill_and_respawn()
-	# Emit signal to UI (The one we set up previously)
 	light_point_changed.emit(light_point)
 	
 func move_bat(_delta: float):
@@ -164,13 +181,28 @@ func update_fly_meter(delta: float):
 func update_fly_amount(amount: float):
 	fly_point += amount
 	fly_point = clamp(fly_point, 0, 100)
-	
 	fly_point_changed.emit(fly_point)
+	
+func update_health_meter(delta: float):
+	if abs(DAMAGE_PER_SECOND - damage_timer) < DELTA:
+		update_health_amount(-1)
+		damage_timer = 0.0
+	if abs(100.0 - light_point) < DELTA:
+		damage_timer += delta
+	if health_point == 0 and not is_invinsible:
+		kill_and_respawn()
+	
+func update_health_amount(amount: int):
+	health_point += amount
+	health_point = clamp(health_point, 0, MAX_HEALTH)
+	health_point_changed.emit(health_point)
 	
 func kill_and_respawn():
 	var spawn_point = $"../SpawnPoint"
 	light_point = 0.0
 	fly_point = 100.0
+	health_point = MAX_HEALTH
+	
 	current_form = Form.HUMAN
 	update_form_visuals()
 	global_position = spawn_point.global_position

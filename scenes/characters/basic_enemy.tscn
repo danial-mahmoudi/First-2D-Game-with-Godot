@@ -1,11 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://yf52pqfih43e"]
+[gd_scene load_steps=16 format=3 uid="uid://yf52pqfih43e"]
 
 [ext_resource type="Script" uid="uid://b2xr5x6khdgu2" path="res://scenes/characters/basic_enemy.gd" id="1_dwul0"]
 [ext_resource type="Texture2D" uid="uid://b20yjhpkth0m6" path="res://assets/art/prototype/prototype.png" id="1_y5dvh"]
 [ext_resource type="Script" uid="uid://ds4680v6fmynv" path="res://scenes/objects/point_light_2d.gd" id="2_xsmbu"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xsmbu"]
-size = Vector2(16, 15)
+[sub_resource type="CircleShape2D" id="CircleShape2D_dwul0"]
+radius = 8.01561
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dwul0"]
 atlas = ExtResource("1_y5dvh")
@@ -24,7 +24,7 @@ animations = [{
 
 [sub_resource type="Gradient" id="Gradient_kvuet"]
 offsets = PackedFloat32Array(0, 0.70666665)
-colors = PackedColorArray(1, 1, 0.8235294, 1, 0, 0, 0, 1)
+colors = PackedColorArray(0.20400001, 0.20400001, 0.85, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_dwul0"]
 gradient = SubResource("Gradient_kvuet")
@@ -34,35 +34,88 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_dwul0"]
-polygon = PackedVector2Array(-7, 7, -10, 16, -8.000001, 5.999999, -4, 6, -2, 16, -5, 7)
+polygon = PackedVector2Array(-7, 7, -12.000001, 19, -8.000001, 5.999999, -4, 6, -8.34465e-07, 19, -5, 7)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_wh1i7"]
 polygon = PackedVector2Array(-6, 13, 6, 13, 6, 16, -6, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wh1i7"]
+atlas = ExtResource("1_y5dvh")
+region = Rect2(96, 352, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mf7s"]
+atlas = ExtResource("1_y5dvh")
+region = Rect2(112, 352, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kcdp1"]
+atlas = ExtResource("1_y5dvh")
+region = Rect2(80, 352, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fn6m"]
+atlas = ExtResource("1_y5dvh")
+region = Rect2(64, 352, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dwul0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wh1i7")
+}],
+"loop": true,
+"name": &"angry",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7mf7s")
+}],
+"loop": false,
+"name": &"empty",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kcdp1")
+}],
+"loop": true,
+"name": &"question",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fn6m")
+}],
+"loop": true,
+"name": &"surprise",
+"speed": 5.0
+}]
+
 [node name="BasicEnemy" type="CharacterBody2D"]
 light_mask = 2
+motion_mode = 1
 script = ExtResource("1_dwul0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8.5)
-shape = SubResource("RectangleShape2D_xsmbu")
+shape = SubResource("CircleShape2D_dwul0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_wh1i7")
 
 [node name="FlashlightHolder" type="Node2D" parent="."]
-position = Vector2(-6, 10)
+position = Vector2(-6, 2)
 
 [node name="VisionCone" type="Area2D" parent="FlashlightHolder"]
 collision_layer = 16
 collision_mask = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FlashlightHolder/VisionCone"]
-position = Vector2(-5, -6)
+position = Vector2(-7, -6)
 rotation = -1.570271
-polygon = PackedVector2Array(35, 95, -6, 5, -49, 95)
+polygon = PackedVector2Array(30.047798, 90.98423, -6, 5, -41.952194, 91.02206)
 
-[node name="PointLight2D" type="PointLight2D" parent="FlashlightHolder" groups=["light"]]
+[node name="PointLight2D" type="PointLight2D" parent="FlashlightHolder"]
+color = Color(0, 0, 18.892157, 1)
 energy = 0.86
 shadow_enabled = true
 shadow_filter = 1
@@ -80,7 +133,15 @@ occluder = SubResource("OccluderPolygon2D_dwul0")
 occluder_light_mask = 8
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+debug_enabled = true
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(0, -8)
 occluder = SubResource("OccluderPolygon2D_wh1i7")
 occluder_light_mask = 4
+
+[node name="EmotionIcon" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -26)
+scale = Vector2(0.5555309, 0.5196225)
+sprite_frames = SubResource("SpriteFrames_dwul0")
+animation = &"question"

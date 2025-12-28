@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwumr15gnfp57"
-path="res://.godot/imported/bat-icon.png-f919ef138e1dad69ea22418bdb3d259f.ctex"
+uid="uid://beqtndyeghe3u"
+path="res://.godot/imported/exclamation-mark.png-c3e9c49bc47ea2d29721d9a2414d2b11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/prototype/bat-icon.png"
-dest_files=["res://.godot/imported/bat-icon.png-f919ef138e1dad69ea22418bdb3d259f.ctex"]
+source_file="res://assets/art/ui/emotion/exclamation-mark.png"
+dest_files=["res://.godot/imported/exclamation-mark.png-c3e9c49bc47ea2d29721d9a2414d2b11.ctex"]
 
 [params]
 
